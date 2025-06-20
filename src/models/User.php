@@ -1,0 +1,86 @@
+<?php
+// Modelo User para ALI 3000
+class User {
+    private $pdo;
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
+    }
+
+    // Buscar usuario por código
+    public function findByCode($codigo_usuario) {
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE codigo_usuario = ? LIMIT 1');
+        $stmt->execute([$codigo_usuario]);
+        return $stmt->fetch();
+    }
+
+    // Buscar usuario por email o nombre de usuario (código)
+    public function findByEmailOrUsername($input) {
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = ? OR codigo_usuario = ? LIMIT 1');
+        $stmt->execute([$input, $input]);
+        return $stmt->fetch();
+    }
+
+    // Validar login de usuario (consultor/validador/admin)
+    public function loginUser($input, $password) {
+        $user = $this->findByEmailOrUsername($input);
+        if ($user && $user['password_hash'] && password_verify($password, $user['password_hash'])) {
+            return $user;
+        }
+        return false;
+    }
+
+    // Crear usuario consultor/validador (solo admin)
+    public function createUser($data) {
+        $sql = 'INSERT INTO usuarios (codigo_usuario, tipo_usuario, primer_nombre, primer_apellido, cedula, fecha_nacimiento, estado, creado_por) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            $data['codigo_usuario'],
+            $data['tipo_usuario'],
+            $data['primer_nombre'],
+            $data['primer_apellido'],
+            $data['cedula'],
+            $data['fecha_nacimiento'],
+            'activo',
+            $data['creado_por']
+        ]);
+    }
+
+    // Actualizar email y contraseña (para registro inicial)
+    public function setEmailAndPassword($codigo_usuario, $email, $password) {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare('UPDATE usuarios SET email = ?, password_hash = ? WHERE codigo_usuario = ? AND (email IS NULL OR email = "")');
+        return $stmt->execute([$email, $hash, $codigo_usuario]);
+    }
+
+    // Generar código de usuario único (C-XXXXX o V-XXXXX)
+    public function generarCodigoUsuario($tipo_usuario) {
+        $prefijo = ($tipo_usuario === 'consultor') ? 'C-' : 'V-';
+        $sql = "SELECT codigo_usuario FROM usuarios WHERE tipo_usuario = ? ORDER BY id DESC LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$tipo_usuario]);
+        $ultimo = $stmt->fetchColumn();
+        $num = 1;
+        if ($ultimo && preg_match('/-(\d{5})$/', $ultimo, $m)) {
+            $num = intval($m[1]) + 1;
+        }
+        return $prefijo . str_pad($num, 5, '0', STR_PAD_LEFT);
+    }
+
+    // Crear usuario desde admin (todos los campos)
+    public function crearUsuarioDesdeAdmin($data) {
+        $sql = "INSERT INTO usuarios (codigo_usuario, tipo_usuario, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cedula, estado, creado_por, tarifa_por_hora, nivel_desarrollo) VALUES (?, ?, ?, ?, ?, ?, ?, 'activo', ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            $data['codigo_usuario'],
+            $data['tipo_usuario'],
+            $data['primer_nombre'],
+            $data['segundo_nombre'],
+            $data['primer_apellido'],
+            $data['segundo_apellido'],
+            $data['cedula'],
+            $data['creado_por'],
+            $data['tarifa_por_hora'],
+            $data['nivel_desarrollo']
+        ]);
+    }
+}
