@@ -13,10 +13,10 @@ class User {
         return $stmt->fetch();
     }
 
-    // Buscar usuario por email o nombre de usuario (código)
+    // Buscar usuario por email, código de usuario o nombre de usuario
     public function findByEmailOrUsername($input) {
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = ? OR codigo_usuario = ? LIMIT 1');
-        $stmt->execute([$input, $input]);
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = ? OR codigo_usuario = ? OR nombre_usuario = ? LIMIT 1');
+        $stmt->execute([$input, $input, $input]);
         return $stmt->fetch();
     }
 
@@ -47,9 +47,17 @@ class User {
 
     // Actualizar email y contraseña (para registro inicial)
     public function setEmailAndPassword($codigo_usuario, $email, $password) {
+        $user = $this->findByCode($codigo_usuario);
+        if (!$user) return false;
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->pdo->prepare('UPDATE usuarios SET email = ?, password_hash = ? WHERE codigo_usuario = ? AND (email IS NULL OR email = "")');
-        return $stmt->execute([$email, $hash, $codigo_usuario]);
+        // Generar nombre de usuario: inicial del primer nombre + todo el primer apellido (sin espacios, mayúsculas)
+        $primer_nombre = trim($user['primer_nombre']);
+        $primer_apellido = trim($user['primer_apellido']);
+        $inicial = $primer_nombre ? strtoupper(mb_substr($primer_nombre, 0, 1, 'UTF-8')) : '';
+        $apellido = $primer_apellido ? strtoupper(str_replace(' ', '', $primer_apellido)) : '';
+        $nombre_usuario = $inicial . $apellido;
+        $stmt = $this->pdo->prepare('UPDATE usuarios SET email = ?, password_hash = ?, nombre_usuario = ? WHERE codigo_usuario = ? AND (email IS NULL OR email = "")');
+        return $stmt->execute([$email, $hash, $nombre_usuario, $codigo_usuario]);
     }
 
     // Generar código de usuario único (C-XXXXX o V-XXXXX)

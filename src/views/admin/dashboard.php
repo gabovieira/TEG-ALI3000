@@ -34,7 +34,7 @@
         <div class="flex items-center space-x-3 mt-8">
             <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-lg font-bold">AD</div>
             <span class="text-sm">Admin</span>
-            <a href="#" class="text-xs text-red-400 hover:text-red-600 ml-2">Cerrar sesión</a>
+            <a href="index.php?controller=auth&action=logout" class="text-xs text-red-400 hover:text-red-600 ml-2">Cerrar sesión</a>
         </div>
     </aside>
     <!-- Main Content -->

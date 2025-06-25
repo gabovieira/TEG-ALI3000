@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background: #000; }
+        @keyframes fade-in { from { opacity: 0; transform: scale(0.98);} to { opacity: 1; transform: scale(1);} }
+        .animate-fade-in { animation: fade-in 0.2s ease; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center">
@@ -53,5 +55,22 @@
             </div>
         </div>
     </div>
+    <?php if (isset($nombre_usuario_exito) && $nombre_usuario_exito): ?>
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        let alerta = document.createElement('div');
+        alerta.className = 'fixed bottom-8 right-8 z-50 bg-green-100 border border-green-300 text-green-800 rounded-xl px-6 py-4 shadow-lg flex flex-col items-center max-w-xs animate-fade-in';
+        alerta.innerHTML = `
+            <div class='text-lg font-bold mb-1'>¡Registro exitoso!</div>
+            <div class='mb-2'>Tu nombre de usuario es:</div>
+            <div class='text-2xl font-mono font-bold bg-white px-4 py-2 rounded border border-green-200 mb-2'><?php echo htmlspecialchars($nombre_usuario_exito); ?></div>
+            <div class='mb-2 text-gray-700 text-sm'>Guárdalo para iniciar sesión junto a tu contraseña.</div>
+            <button onclick='this.parentNode.remove()' class='absolute top-2 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold'>&times;</button>
+        `;
+        document.body.appendChild(alerta);
+        setTimeout(() => { alerta.remove(); }, 20000); // 20 segundos
+    });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

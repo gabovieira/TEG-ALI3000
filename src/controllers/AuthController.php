@@ -78,11 +78,35 @@ class AuthController {
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         if ($this->userModel->setEmailAndPassword($codigo, $email, $password)) {
+            $user = $this->userModel->findByCode($codigo);
+            $nombre_usuario = $user['primer_nombre'] && $user['primer_apellido']
+                ? strtoupper(mb_substr(trim($user['primer_nombre']), 0, 1, 'UTF-8')) . strtoupper(str_replace(' ', '', trim($user['primer_apellido'])))
+                : '';
             $success = 'Registro exitoso. Ahora puedes iniciar sesión.';
+            $nombre_usuario_exito = $nombre_usuario;
             include __DIR__ . '/../views/shared/login.php';
         } else {
             $error = 'Código inválido o ya registrado.';
             include __DIR__ . '/../views/shared/register.php';
         }
+    }
+
+    // API para autocompletar datos por código de registro
+    public function apiGetUserByCode() {
+        $codigo = $_GET['codigo_usuario'] ?? '';
+        $user = $this->userModel->findByCode($codigo);
+        if ($user) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'existe' => true,
+                'cedula' => $user['cedula'] ?? '',
+                'nombre' => $user['primer_nombre'] ?? '',
+                'apellido' => $user['primer_apellido'] ?? ''
+            ]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['existe' => false]);
+        }
+        exit;
     }
 }

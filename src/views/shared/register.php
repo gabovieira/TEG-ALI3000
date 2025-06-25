@@ -32,10 +32,25 @@
                         <?= htmlspecialchars($error) ?>
                     </div>
                 <?php endif; ?>
-                <form method="POST" action="index.php?controller=auth&action=registerUser" class="space-y-5">
+                <form method="POST" action="index.php?controller=auth&action=registerUser" class="space-y-5" id="registerForm" autocomplete="off">
                     <div>
                         <label class="block text-gray-700 mb-1" for="codigo_usuario">Código de Registro</label>
                         <input type="text" id="codigo_usuario" name="codigo_usuario" required autofocus class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="mt-1 text-sm text-red-500 hidden" id="codigoError">El código es obligatorio o inválido.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-1" for="nombre">Nombre(s)</label>
+                            <input type="text" id="nombre" name="nombre" required class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100" readonly>
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-1" for="apellido">Apellido</label>
+                            <input type="text" id="apellido" name="apellido" required class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100" readonly>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1" for="cedula">Cédula</label>
+                        <input type="text" id="cedula" name="cedula" required class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100" readonly>
                     </div>
                     <div>
                         <label class="block text-gray-700 mb-1" for="email">Correo electrónico</label>
@@ -47,6 +62,34 @@
                     </div>
                     <button type="submit" class="w-full bg-black hover:bg-gray-900 text-white font-bold py-3 rounded-lg transition">Registrarse</button>
                 </form>
+                <script>
+                // Autocompletar datos al ingresar código de registro
+                document.getElementById('codigo_usuario').addEventListener('blur', function() {
+                    const codigo = this.value.trim();
+                    if (!codigo) return;
+                    fetch('index.php?controller=auth&action=apiGetUserByCode&codigo_usuario=' + encodeURIComponent(codigo))
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.existe) {
+                                document.getElementById('cedula').value = data.cedula || '';
+                                document.getElementById('nombre').value = data.nombre || '';
+                                document.getElementById('apellido').value = data.apellido || '';
+                                document.getElementById('cedula').readOnly = true;
+                                document.getElementById('nombre').readOnly = true;
+                                document.getElementById('apellido').readOnly = true;
+                                document.getElementById('codigoError').classList.add('hidden');
+                            } else {
+                                document.getElementById('cedula').value = '';
+                                document.getElementById('nombre').value = '';
+                                document.getElementById('apellido').value = '';
+                                document.getElementById('cedula').readOnly = true;
+                                document.getElementById('nombre').readOnly = true;
+                                document.getElementById('apellido').readOnly = true;
+                                document.getElementById('codigoError').classList.remove('hidden');
+                            }
+                        });
+                });
+                </script>
             </div>
         </div>
     </div>
