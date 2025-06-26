@@ -1,22 +1,63 @@
-<!-- Loader pantalla completa reutilizable -->
-<div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-300">
-    <div class="flex flex-col items-center">
-        <img src="/ali3000/assets/img/logoali3000.png" alt="Logo ALI 3000" class="w-32 h-32 mb-6 animate-pulse" />
-        <span class="text-2xl font-extrabold text-blue-900 mb-2 tracking-wide">ALI 3000 CONSULTORES</span>
-        <svg class="animate-spin h-12 w-12 text-blue-600 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-        </svg>
-        <span class="text-lg font-semibold text-blue-700">Cargando...</span>
+<!-- Loader minimalista centrado con logo, texto y spinner -->
+<style>
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: #f8f9fa;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loader-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.loader-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 16px 0 #0001;
+  position: relative;
+}
+.loader-spinner {
+  position: absolute;
+  top: -10px; left: -10px;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #2563eb;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.loader-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.loader-subtitle {
+  font-size: 1rem;
+  color: #b91c1c;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-weight: 600;
+}
+</style>
+<div id="loader" class="loader-overlay">
+  <div class="loader-box">
+    <div class="loader-logo">
+      <div class="loader-spinner"></div>
+      <img src="/ali3000/assets/img/logoali3000.png" alt="ali3000 consultores logo" style="width:60px; height:60px; object-fit:contain; z-index:1;" />
     </div>
+    <div class="loader-title">ali3000</div>
+    <div class="loader-subtitle">CONSULTORES</div>
+  </div>
 </div>
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(function() {
-            document.getElementById('loader').style.display = 'none';
-        }, 300);
-    }, 800);
-});
-</script>

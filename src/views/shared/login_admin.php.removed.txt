@@ -1,3 +1,0 @@
-El archivo login_admin.php ha sido eliminado porque ahora solo existe un login general para todos los usuarios (admin, consultor, validador, etc.).
-
-Si necesitas restaurarlo, puedes consultar el historial de versiones o pedírmelo nuevamente.
