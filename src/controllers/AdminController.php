@@ -15,6 +15,14 @@ class AdminController {
             exit;
         }
         $admin = $_SESSION['user'];
+        require_once __DIR__ . '/../models/User.php';
+        $userModel = new User($this->pdo);
+        $usuarios_activos = $userModel->getUsuariosActivosCount();
+        $consultores_activos_sidebar = $userModel->getConsultoresActivosCount();
+        $validadores_activos = $userModel->getValidadoresActivosCount();
+        // Empresas activas
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM empresas WHERE estado = 'activo'");
+        $empresas_activas = $stmt ? $stmt->fetchColumn() : 0;
         include __DIR__ . '/../views/admin/dashboard.php';
     }
 

@@ -91,4 +91,22 @@ class User {
             $data['nivel_desarrollo']
         ]);
     }
+
+    // Obtener conteo de usuarios activos (consultores y validadores, excluye admin)
+    public function getUsuariosActivosCount() {
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE estado = 'activo' AND tipo_usuario IN ('consultor', 'validador')");
+        return $stmt ? $stmt->fetchColumn() : 0;
+    }
+
+    // Obtener conteo de consultores activos
+    public function getConsultoresActivosCount() {
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'consultor' AND estado = 'activo'");
+        return $stmt ? $stmt->fetchColumn() : 0;
+    }
+
+    // Obtener conteo de validadores activos
+    public function getValidadoresActivosCount() {
+        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'validador' AND estado = 'activo'");
+        return $stmt ? $stmt->fetchColumn() : 0;
+    }
 }

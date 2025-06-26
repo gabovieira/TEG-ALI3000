@@ -12,23 +12,7 @@
 <body class="bg-gray-50 min-h-screen">
 <!-- Loader pantalla completa -->
 <?php include __DIR__ . '/../shared/loader.php'; ?>
-<?php
-// Inicializar métricas del sidebar antes del HTML
-require_once __DIR__ . '/../../../config/database.php';
-$pdo = getDbConnection();
-// Usuarios activos (solo consultores y validadores, excluye admin)
-$result_usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE estado = 'activo' AND tipo_usuario IN ('consultor', 'validador')");
-$usuarios_activos = $result_usuarios ? $result_usuarios->fetch_row()[0] : 0;
-// Consultores activos
-$result_consultores = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'consultor' AND estado = 'activo'");
-$consultores_activos_sidebar = $result_consultores ? $result_consultores->fetch_row()[0] : 0;
-// Validadores activos
-$result_validadores = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'validador' AND estado = 'activo'");
-$validadores_activos = $result_validadores ? $result_validadores->fetch_row()[0] : 0;
-// Empresas activas
-$result_empresas = $pdo->query("SELECT COUNT(*) FROM empresas WHERE estado = 'activo'");
-$empresas_activas = $result_empresas ? $result_empresas->fetch_row()[0] : 0;
-?>
+<!-- Las métricas ya vienen preparadas por el controlador: $usuarios_activos, $consultores_activos_sidebar, $validadores_activos, $empresas_activas -->
 <div class="flex min-h-screen h-screen overflow-hidden">
     <!-- Sidebar Moderno -->
 <aside class="bg-white border-r border-gray-200 w-64 min-h-screen flex flex-col py-6 px-4">
@@ -262,7 +246,7 @@ $empresas_activas = $result_empresas ? $result_empresas->fetch_row()[0] : 0;
             <div id="dashboard-main" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white p-4 rounded-lg shadow-md flex flex-col">
                     <div class="text-gray-500 text-sm">Consultores Activos</div>
-                    <div class="text-2xl font-bold" id="consultores-activos"><?php echo $consultores_activos; ?></div>
+                    <div class="text-2xl font-bold" id="consultores-activos"><?php echo $consultores_activos_sidebar; ?></div>
                     <div class="text-xs text-green-600">&nbsp;</div>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-md flex flex-col">
