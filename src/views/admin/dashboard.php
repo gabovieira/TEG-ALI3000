@@ -1,4 +1,3 @@
-<?php ini_set('display_errors', 1); error_reporting(E_ALL); echo "<div style='color:red;font-size:2em;'>PRUEBA ERROR: ".$variable_que_no_existe."</div>"; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,33 +11,173 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 <!-- Loader pantalla completa -->
-<?php include __DIR__ . '/../compartido/loader.php'; ?>
+<?php include __DIR__ . '/../shared/loader.php'; ?>
+<!-- Las métricas ya vienen preparadas por el controlador: $usuarios_activos, $consultores_activos_sidebar, $validadores_activos, $empresas_activas -->
 <div class="flex min-h-screen h-screen overflow-hidden">
     <!-- Sidebar Moderno -->
-    <?php 
-        $menu_activo = 'dashboard'; 
-        include __DIR__ . '/../compartido/sidebar-admin.php'; 
-    ?>
+<aside class="bg-white border-r border-gray-200 w-64 min-h-screen flex flex-col py-6 px-4">
+    <div class="flex-1 flex flex-col justify-between h-full">
+        <div>
+            <div class="flex items-center mb-8">
+                <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center mr-3">
+                    <img src="/ali3000/assets/img/logoali3000.png" alt="Logo ALI 3000"  />
+                </div>
+                <div>
+                    <div class="text-lg font-bold text-gray-900">ALI 3000</div>
+                    <div class="text-xs text-gray-400">Sistema de Gestión</div>
+                </div>
+            </div>
+            <nav class="space-y-1">
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg bg-gray-100 text-gray-900 font-semibold">
+                    <!-- Home (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-home" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M3 9.5 12 4l9 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M19 10v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 22V12h6v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <div class="text-xs text-gray-400 mt-4 mb-1 ml-3">Gestión de Usuarios</div>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Users (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-user" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 20v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Usuarios
+                    <span class="ml-auto text-xs bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 font-bold" title="Solo consultores y validadores activos"><?php echo $usuarios_activos; ?></span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- User Cog (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-users" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Consultores
+                    <span class="ml-auto text-xs bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 font-bold"><?php echo $consultores_activos_sidebar; ?></span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Shield (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-shield" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Validadores
+                    <span class="ml-auto text-xs bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 font-bold"><?php echo $validadores_activos; ?></span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Building (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-building" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 3v4M8 3v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Empresas
+                    <span class="ml-auto text-xs bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 font-bold"><?php echo $empresas_activas; ?></span>
+                </a>
+                <div class="text-xs text-gray-400 mt-4 mb-1 ml-3">Operaciones</div>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Clock (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-clock" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Gestión de Horas
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Credit Card (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-credit-card" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="2" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Pagos
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Bar Chart (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-bar-chart-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M3 12v8h18v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="7" y="8" width="3" height="8" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="14" y="4" width="3" height="12" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Reportes
+                </a>
+                <div class="text-xs text-gray-400 mt-4 mb-1 ml-3">Sistema</div>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <!-- Settings (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-settings" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Configuración
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition relative">
+                    <!-- Bell (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 lucide lucide-bell" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Notificaciones
+                    <span class="ml-auto text-xs bg-red-500 text-white rounded-full px-2 py-0.5 font-bold">3</span>
+                </a>
+            </nav>
+        </div>
+        <div class="mt-8">
+            <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2">
+                <div class="w-8 h-8 rounded bg-gray-300 flex items-center justify-center mr-2">
+                    <span class="text-gray-700 font-bold">AD</span>
+                </div>
+                <div>
+                    <div class="text-sm font-semibold text-gray-900">Admin</div>
+                    <div class="text-xs text-gray-500">admin@ali3000.com</div>
+                </div>
+            </div>
+            <a href="index.php?controller=auth&action=logout" class="block mt-3 text-xs text-red-500 hover:underline text-center">Cerrar sesión</a>
+        </div>
+    </div>
+</aside>
     <!-- Main Content -->
     <main class="flex-1 flex flex-col min-h-0 overflow-y-auto">
         <!-- Header Superior -->
-        <?php 
-            $titulo_header = 'Dashboard';
-            include __DIR__ . '/../compartido/header-admin.php'; 
+        <?php
+        try {
+            require_once __DIR__ . '/../../../config/database.php';
+            require_once __DIR__ . '/../../services/TasaBCVService.php';
+            require_once __DIR__ . '/../../models/User.php';
+
+            // Conexión a la base de datos
+            $pdo = getDbConnection(); // Usar la función y asignar a $pdo
+            $tasaService = new TasaBCVService($pdo);
+
+            // 1. Consultar la API y guardar la tasa solo si no existe para hoy
+            $tasa_api = $tasaService->fetchTasaBCV();
+            if ($tasa_api) {
+                $tasaService->saveTasaBCV($tasa_api, 'API');
+            }
+            // 2. Obtener la última tasa registrada
+            $tasa_bcv = $tasaService->getUltimaTasa();
+            $tasa_bcv_texto = $tasa_bcv ? number_format($tasa_bcv->tasa, 2, ',', '.') . ' Bs/USD' : '--';
+
+            $userModel = new User($pdo);
+
+            // Consultores activos
+            $result = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'consultor' AND estado = 'activo'");
+            $consultores_activos = $result ? $result->fetch_row()[0] : 0;
+            // Usuarios activos
+            $result_usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios WHERE estado = 'activo' AND tipo_usuario IN ('consultor', 'validador')");
+            $usuarios_activos = $result_usuarios ? $result_usuarios->fetch_row()[0] : 0;
         ?>
-        <!-- Aquí solo visualización de datos, las variables deben venir del controlador -->
-        <header class="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
-            <div class="flex items-center space-x-2">
-                <span class="text-gray-400 text-sm font-semibold">ALI 3000</span>
-                <span class="mx-2 text-gray-300">›</span>
-                <span class="text-gray-900 font-bold">Dashboard</span>
-            </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-blue-700 font-semibold">Tasa BCV:</span>
-                <span class="font-bold text-gray-900"><?php echo $tasa_bcv_texto; ?></span>
-                <span class="text-xs text-gray-500 ml-2">actualizado</span>
-            </div>
-        </header>
+<header class="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
+    <div class="flex items-center space-x-2">
+        <span class="text-gray-400 text-sm font-semibold">ALI 3000</span>
+        <span class="mx-2 text-gray-300">›</span>
+        <span class="text-gray-900 font-bold">Dashboard</span>
+    </div>
+    <div class="flex items-center space-x-2">
+        <span class="text-blue-700 font-semibold">Tasa BCV:</span>
+        <span class="font-bold text-gray-900"><?php echo $tasa_bcv_texto; ?></span>
+        <span class="text-xs text-gray-500 ml-2">actualizado</span>
+    </div>
+</header>
         <!-- Frase de quincena actual arriba del dashboard -->
         <section class="mb-4 flex flex-col items-center justify-center">
             <?php
@@ -126,7 +265,49 @@
                     <div class="text-xs text-gray-500">&nbsp;</div>
                 </div>
             </div>
-            <!-- Eliminar la sección de usuarios activos (usuarios-main) -->
+            <!-- Vista de usuarios (oculta por defecto, solo accesible desde el sidebar) -->
+            <div id="usuarios-main" class="hidden mb-8">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Usuarios Activos (Consultores y Validadores)</h2>
+                <div class="overflow-x-auto rounded-lg shadow">
+                    <table class="min-w-full bg-white text-gray-800 text-sm">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Código</th>
+                                <th class="px-4 py-2 text-left">Nombre</th>
+                                <th class="px-4 py-2 text-left">Tipo</th>
+                                <th class="px-4 py-2 text-left">Empresa</th>
+                                <th class="px-4 py-2 text-left">Estado</th>
+                                <th class="px-4 py-2 text-left">Creado</th>
+                                <th class="px-4 py-2 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $result_usuarios_sidebar = $pdo->query("SELECT u.codigo_usuario, CONCAT(u.primer_nombre, ' ', u.primer_apellido) AS nombre, u.tipo_usuario, u.estado, u.fecha_creacion, e.nombre AS empresa_nombre FROM usuarios u LEFT JOIN usuario_empresas ue ON ue.usuario_id = u.id AND ue.estado = 'activa' LEFT JOIN empresas e ON ue.empresa_id = e.id WHERE u.estado = 'activo' AND u.tipo_usuario IN ('consultor', 'validador') ORDER BY u.fecha_creacion DESC");
+                        if ($result_usuarios_sidebar && $result_usuarios_sidebar->num_rows > 0) {
+                            while ($row = $result_usuarios_sidebar->fetch_assoc()) {
+                                echo '<tr class="hover:bg-blue-50 transition">';
+                                echo '<td class="px-4 py-2">' . htmlspecialchars($row['codigo_usuario']) . '</td>';
+                                echo '<td class="px-4 py-2">' . htmlspecialchars($row['nombre']) . '</td>';
+                                echo '<td class="px-4 py-2 capitalize">' . htmlspecialchars($row['tipo_usuario']) . '</td>';
+                                echo '<td class="px-4 py-2">' . htmlspecialchars($row['empresa_nombre'] ?? '') . '</td>';
+                                echo '<td class="px-4 py-2">' . htmlspecialchars($row['estado']) . '</td>';
+                                echo '<td class="px-4 py-2">' . htmlspecialchars($row['fecha_creacion']) . '</td>';
+                                echo '<td class="px-4 py-2 text-center flex gap-2 justify-center">';
+                                echo '<button class="text-blue-600 hover:underline text-xs font-bold" title="Editar"><svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 11l6 6M3 17.25V21h3.75l11.06-11.06a2.121 2.121 0 0 0-3-3L3 17.25z"/></svg>Editar</button>';
+                                echo '<button class="text-yellow-600 hover:underline text-xs font-bold" title="Desactivar"><svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-1.414-1.414a2 2 0 0 0-2.828 0L12 6.343l-2.121-2.121a2 2 0 0 0-2.828 0l-1.415 1.414a2 2 0 0 0 0 2.828L6.343 12l-2.121 2.121a2 2 0 0 0 0 2.828l1.415 1.415a2 2 0 0 0 2.828 0L12 17.657l2.121 2.121a2 2 0 0 0 2.828 0l1.414-1.415a2 2 0 0 0 0-2.828L17.657 12l2.121-2.121a2 2 0 0 0 0-2.828z"/></svg>Desactivar</button>';
+                                echo '<button class="text-red-600 hover:underline text-xs font-bold" title="Eliminar"><svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>Eliminar</button>';
+                                echo '</td>';
+                                echo '</tr>';
+                            }
+                        } else {
+                            echo '<tr><td colspan="7" class="text-center text-gray-400 py-6">Sin usuarios activos</td></tr>';
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <!-- Alertas y notificaciones (vacías) -->
             <div class="space-y-4 mb-8" id="alertas-dashboard"></div>
             <!-- Acciones rápidas (sin datos fijos) -->
@@ -352,7 +533,35 @@ window.addEventListener('DOMContentLoaded', function() {
     }, 400); // menos tiempo para evitar overlay molesto
 });
 </script>
-</main>
+<?php
+        } catch (Throwable $e) {
+            echo '<div class="p-8 text-center text-red-700 font-bold text-lg">Ocurrió un error al cargar el dashboard: ' . htmlspecialchars($e->getMessage()) . '</div>';
+            echo '<script>setTimeout(function(){ var loader = document.getElementById(\'loader\'); if(loader){ loader.style.opacity = \'0\'; setTimeout(function(){ loader.style.display = \'none\'; }, 200); } }, 100);</script>';
+        }
+        ?>
+    </main>
 </div>
+<script>
+// Alternar entre dashboard y vista de usuarios
+const enlaceUsuarios = document.querySelector('nav a:has(svg.lucide-user)');
+const dashboardMain = document.getElementById('dashboard-main');
+const usuariosMain = document.getElementById('usuarios-main');
+if(enlaceUsuarios && dashboardMain && usuariosMain) {
+    enlaceUsuarios.addEventListener('click', function(e) {
+        e.preventDefault();
+        dashboardMain.classList.add('hidden');
+        usuariosMain.classList.remove('hidden');
+    });
+}
+// Si quieres volver al dashboard, puedes agregar un botón o usar el enlace Dashboard
+const enlaceDashboard = document.querySelector('nav a:has(svg.lucide-home)');
+if(enlaceDashboard && dashboardMain && usuariosMain) {
+    enlaceDashboard.addEventListener('click', function(e) {
+        e.preventDefault();
+        usuariosMain.classList.add('hidden');
+        dashboardMain.classList.remove('hidden');
+    });
+}
+</script>
 </body>
 </html>

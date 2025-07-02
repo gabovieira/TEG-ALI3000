@@ -55,7 +55,7 @@
   <div class="loader-box">
     <div class="loader-logo">
       <div class="loader-spinner"></div>
-      <img src="/TEG-ALI3000/assets/img/logoali3000.png" alt="ali3000 consultores logo" style="width:60px; height:60px; object-fit:contain; z-index:1;" />
+      <img src="/ali3000/assets/img/logoali3000.png" alt="ali3000 consultores logo" style="width:60px; height:60px; object-fit:contain; z-index:1;" />
     </div>
     <div class="loader-title">ali3000</div>
     <div class="loader-subtitle">CONSULTORES</div>
