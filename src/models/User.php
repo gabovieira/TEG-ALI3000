@@ -99,21 +99,19 @@ class User {
         ]);
     }
 
-    // Obtener conteo de usuarios activos (consultores y validadores, excluye admin)
-    public function getUsuariosActivosCount() {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE estado = 'activo' AND tipo_usuario IN ('consultor', 'validador')");
-        return $stmt ? $stmt->fetchColumn() : 0;
+    // Obtener usuarios activos (consultores y validadores) con datos completos para la vista de usuarios
+    public function obtenerUsuariosActivos() {
+        $sql = "SELECT u.codigo_usuario, CONCAT(u.primer_nombre, ' ', u.primer_apellido) AS nombre, u.tipo_usuario, u.estado, u.fecha_creacion, e.nombre AS empresa_nombre
+                FROM usuarios u
+                LEFT JOIN usuario_empresas ue ON ue.usuario_id = u.id AND ue.estado = 'activa'
+                LEFT JOIN empresas e ON ue.empresa_id = e.id
+                WHERE u.estado = 'activo' AND (u.tipo_usuario = 'consultor' OR u.tipo_usuario = 'validador')
+                ORDER BY u.fecha_creacion DESC";
+        $stmt = $this->pdo->query($sql);
+        return $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
     }
 
-    // Obtener conteo de consultores activos
-    public function getConsultoresActivosCount() {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'consultor' AND estado = 'activo'");
-        return $stmt ? $stmt->fetchColumn() : 0;
-    }
-
-    // Obtener conteo de validadores activos
-    public function getValidadoresActivosCount() {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM usuarios WHERE tipo_usuario = 'validador' AND estado = 'activo'");
-        return $stmt ? $stmt->fetchColumn() : 0;
-    }
+    // El resto de funciones de usuario (login, registro, etc.)
+    // ...
+    // (Las funciones de métricas globales han sido movidas a MetricasAdmin)
 }

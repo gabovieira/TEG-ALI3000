@@ -10,13 +10,9 @@ class AuthController {
 
     // Mostrar formulario de login
     public function showLogin() {
-        include __DIR__ . '/../views/shared/login.php';
+        include __DIR__ . '/../views/compartido/login.php';
     }
 
-    // Mostrar formulario de login de admin
-    public function showLoginAdmin() {
-        include __DIR__ . '/../views/shared/login_admin.php';
-    }
 
     // Procesar login de administrador
     public function loginAdmin() {
@@ -30,7 +26,7 @@ class AuthController {
             exit;
         } else {
             $error = 'Código o contraseña incorrectos';
-            include __DIR__ . '/../views/shared/login.php';
+            include __DIR__ . '/../views/compartido/login.php';
         }
     }
 
@@ -55,7 +51,7 @@ class AuthController {
             exit;
         } else {
             $error = 'Usuario/email o contraseña incorrectos';
-            include __DIR__ . '/../views/shared/login.php';
+            include __DIR__ . '/../views/compartido/login.php';
         }
     }
 

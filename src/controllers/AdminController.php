@@ -15,11 +15,11 @@ class AdminController {
             exit;
         }
         $admin = $_SESSION['user'];
-        require_once __DIR__ . '/../models/User.php';
-        $userModel = new User($this->pdo);
-        $usuarios_activos = $userModel->getUsuariosActivosCount();
-        $consultores_activos_sidebar = $userModel->getConsultoresActivosCount();
-        $validadores_activos = $userModel->getValidadoresActivosCount();
+        require_once __DIR__ . '/../models/MetricasAdmin.php';
+        $metricas = new MetricasAdmin($this->pdo);
+        $usuarios_activos = $metricas->obtenerUsuariosActivos();
+        $consultores_activos_sidebar = $metricas->obtenerConsultoresActivos();
+        $validadores_activos = $metricas->obtenerValidadoresActivos();
         // Empresas activas
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM empresas WHERE estado = 'activo'");
         $empresas_activas = $stmt ? $stmt->fetchColumn() : 0;
@@ -78,5 +78,20 @@ class AdminController {
         // Si no es POST, redirigir al dashboard
         header('Location: index.php?controller=admin&action=dashboard');
         exit;
+    }
+
+    // Vista de gestión de usuarios (consultores y validadores)
+    public function usuarios() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_usuario'] !== 'admin') {
+            header('Location: index.php');
+            exit;
+        }
+        require_once __DIR__ . '/../models/User.php';
+        $userModel = new User($this->pdo);
+        $usuarios_activos = $userModel->obtenerUsuariosActivos();
+        include __DIR__ . '/../views/admin/usuarios.php';
     }
 }
