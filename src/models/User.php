@@ -1,30 +1,37 @@
 <?php
-// Modelo User para ALI 3000
+// Modelo User para ALI 3000 - Solo login por email
 class User {
     private $pdo;
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
-    // Buscar usuario por código
-    public function findByCode($codigo_usuario) {
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE codigo_usuario = ? LIMIT 1');
-        $stmt->execute([$codigo_usuario]);
+    // Buscar usuario por email
+    public function findByEmail($email) {
+        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = ? LIMIT 1');
+        $stmt->execute([$email]);
         return $stmt->fetch();
     }
 
-    // Buscar usuario por email, código de usuario o nombre de usuario
-    public function findByEmailOrUsername($input) {
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = ? OR codigo_usuario = ? OR nombre_usuario = ? LIMIT 1');
-        $stmt->execute([$input, $input, $input]);
-        return $stmt->fetch();
+    // Validar login de usuario (admin/consultor)
+    public function loginUser($email, $password) {
+        $user = $this->findByEmail($email);
+        if ($user && $user['estado'] === 'activo') {
+            $passwordData = $this->getPasswordData($user['id']);
+            if ($passwordData && password_verify($password, $passwordData['password_hash'])) {
+                return $user;
+            }
+        }
+        return false;
     }
 
-    // Validar login de usuario (consultor/validador/admin)
-    public function loginUser($input, $password) {
-        $user = $this->findByEmailOrUsername($input);
-        if ($user && $user['password_hash'] && password_verify($password, $user['password_hash'])) {
-            return $user;
+    // Obtener datos de contraseña del usuario
+    private function getPasswordData($userId) {
+        $stmt = $this->pdo->prepare('SELECT valor FROM contactos_usuario WHERE usuario_id = ? AND tipo_contacto = "password" LIMIT 1');
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch();
+        if ($result) {
+            return ['password_hash' => $result['valor']];
         }
         return false;
     }
