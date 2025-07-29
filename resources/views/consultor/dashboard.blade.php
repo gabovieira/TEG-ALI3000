@@ -10,7 +10,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-[#708090] text-sm font-medium">Horas del Mes</p>
-                <p class="text-3xl font-bold text-[#000000]">142.5</p>
+                <p class="text-3xl font-bold text-[#000000]">{{ number_format($horasMesActual, 1) }}</p>
             </div>
             <div class="w-12 h-12 bg-[#4682B4] bg-opacity-10 rounded-lg flex items-center justify-center">
                 <svg class="w-6 h-6 text-[#4682B4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,7 +19,11 @@
             </div>
         </div>
         <div class="mt-4 flex items-center">
-            <span class="text-green-500 text-sm font-medium">+15%</span>
+            @php
+                $color = $variacionHorasMes > 0 ? 'text-green-500' : ($variacionHorasMes < 0 ? 'text-red-500' : 'text-gray-400');
+                $signo = $variacionHorasMes > 0 ? '+' : '';
+            @endphp
+            <span class="{{ $color }} text-sm font-medium">{{ $signo }}{{ number_format($variacionHorasMes, 1) }}%</span>
             <span class="text-[#708090] text-sm ml-2">vs mes anterior</span>
         </div>
     </div>
@@ -29,7 +33,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-[#708090] text-sm font-medium">Pagos Pendientes</p>
-                <p class="text-3xl font-bold text-[#000000]">$2,850</p>
+                <p class="text-3xl font-bold text-[#000000]">${{ number_format($pagosPendientes, 2, '.', ',') }}</p>
             </div>
             <div class="w-12 h-12 bg-[#FF6347] bg-opacity-10 rounded-lg flex items-center justify-center">
                 <svg class="w-6 h-6 text-[#FF6347]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,6 +64,66 @@
             <span class="text-green-500 text-sm font-medium">Nivel Senior</span>
         </div>
     </div>
+</div>
+
+<!-- Pagos Mensuales -->
+<div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-8">
+    <h3 class="text-lg font-semibold text-[#000000] mb-4">Pagos Mensuales</h3>
+    <canvas id="graficoPagosMensualesConsultor" height="80"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('graficoPagosMensualesConsultor').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($labelsMeses ?? []),
+                datasets: [
+                    {
+                        label: 'Total',
+                        data: @json($pagosTotales ?? []),
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37,99,235,0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Pagados',
+                        data: @json($pagosPagados ?? []),
+                        borderColor: '#f59e42',
+                        backgroundColor: 'rgba(245,158,66,0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Confirmados',
+                        data: @json($pagosConfirmados ?? []),
+                        borderColor: '#6b7280',
+                        backgroundColor: 'rgba(107,114,128,0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+    </script>
 </div>
 
 <!-- Quick Actions -->
@@ -111,20 +175,20 @@
         <div class="space-y-4">
             <div class="flex items-center justify-between">
                 <span class="text-[#708090]">Horas Registradas</span>
-                <span class="text-sm font-medium text-[#000000]">142.5 hrs</span>
+                <span class="text-sm font-medium text-[#000000]">{{ number_format($horasRegistradas, 1) }} hrs</span>
             </div>
             <div class="flex items-center justify-between">
                 <span class="text-[#708090]">Horas Aprobadas</span>
-                <span class="text-sm font-medium text-green-600">130.0 hrs</span>
+                <span class="text-sm font-medium text-green-600">{{ number_format($horasAprobadas, 1) }} hrs</span>
             </div>
             <div class="flex items-center justify-between">
                 <span class="text-[#708090]">Horas Pendientes</span>
-                <span class="text-sm font-medium text-yellow-600">12.5 hrs</span>
+                <span class="text-sm font-medium text-yellow-600">{{ number_format($horasPendientes, 1) }} hrs</span>
             </div>
             <div class="border-t pt-4">
                 <div class="flex items-center justify-between">
                     <span class="text-[#708090] font-medium">Total a Cobrar</span>
-                    <span class="text-lg font-bold text-[#4682B4]">$3,250.00</span>
+                    <span class="text-lg font-bold text-[#4682B4]">${{ number_format($totalACobrar, 2, '.', ',') }}</span>
                 </div>
             </div>
         </div>
