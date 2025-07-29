@@ -76,6 +76,7 @@
                 <option value="pendiente" {{ $filtros['estado'] == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                 <option value="pagado" {{ $filtros['estado'] == 'pagado' ? 'selected' : '' }}>Pagado</option>
                 <option value="anulado" {{ $filtros['estado'] == 'anulado' ? 'selected' : '' }}>Anulado</option>
+                <option value="confirmado" {{ $filtros['estado'] == 'confirmado' ? 'selected' : '' }}>Confirmado</option>
             </select>
         </div>
         
@@ -238,6 +239,10 @@
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                     Anulado
                                 </span>
+                            @elseif($pago->estado == 'confirmado')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    Confirmado
+                                </span>
                             @endif
                             
                             @if($pago->detalles->count() > 0)
@@ -278,7 +283,7 @@
                                     </form>
                                 @endif
                                 
-                                @if($pago->estado == 'pagado')
+                                @if($pago->estado == 'pagado' || $pago->estado == 'confirmado')
                                     <a href="{{ route('admin.pagos.comprobante', $pago->id) }}" 
                                        class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
                                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

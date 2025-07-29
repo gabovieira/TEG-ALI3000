@@ -24,7 +24,7 @@ class AdminController extends Controller
         // Pagos del mes actual
         $pagosMesActual = Pago::whereMonth('fecha_pago', Carbon::now()->month)
                              ->whereYear('fecha_pago', Carbon::now()->year)
-                             ->where('estado', 'pagado')
+                             ->whereIn('estado', ['pagado', 'confirmado'])
                              ->sum('monto_neto'); // Usando monto_neto para consistencia
 
         // Tasa BCV más reciente (siempre la más actual disponible)
@@ -80,7 +80,7 @@ class AdminController extends Controller
 
         // Pagos recientes (solo pagados y del mes actual)
         $pagosRecientes = Pago::with('consultor')
-                             ->where('estado', 'pagado')
+                             ->whereIn('estado', ['pagado', 'confirmado'])
                              ->whereMonth('fecha_pago', Carbon::now()->month)
                              ->whereYear('fecha_pago', Carbon::now()->year)
                              ->orderBy('fecha_pago', 'desc')
@@ -110,31 +110,59 @@ class AdminController extends Controller
         $mesAnteriorPagos = Carbon::now()->copy()->subMonth();
         $pagosMesAnterior = Pago::whereMonth('fecha_pago', $mesAnteriorPagos->month)
                                ->whereYear('fecha_pago', $mesAnteriorPagos->year)
-                               ->where('estado', 'pagado')
+                               ->whereIn('estado', ['pagado', 'confirmado'])
                                ->sum('monto_neto'); // Usando monto_neto para consistencia
 
         $crecimientoPagos = $pagosMesAnterior > 0 
             ? round((($pagosMesActual - $pagosMesAnterior) / $pagosMesAnterior) * 100, 1)
             : 0;
             
-        // Datos para el gráfico de pagos mensuales
-        $datosPagosMensuales = [];
-        $anioActual = Carbon::now()->year;
-        
-        for ($mes = 1; $mes <= 12; $mes++) {
-            $pagosMes = Pago::whereMonth('fecha_pago', $mes)
-                           ->whereYear('fecha_pago', $anioActual)
-                           ->where('estado', 'pagado')
-                           ->sum('monto_neto'); // Usando monto_neto para consistencia
-            
-            $datosPagosMensuales[] = $pagosMes;
+        // Datos para el gráfico de pagos mensuales (últimos 12 meses)
+        $pagosTotales = [];
+        $pagosPagados = [];
+        $pagosConfirmados = [];
+        $labelsMeses = [];
+        $fechaIter = Carbon::now()->copy()->startOfMonth()->subMonths(11);
+        for ($i = 0; $i < 12; $i++) {
+            $mes = $fechaIter->month;
+            $anio = $fechaIter->year;
+            $mesesES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            $labelsMeses[] = $mesesES[$fechaIter->month - 1];
+            $pagosTotales[] = Pago::whereMonth('fecha_pago', $mes)
+                ->whereYear('fecha_pago', $anio)
+                ->whereIn('estado', ['pagado', 'confirmado'])
+                ->sum('monto_neto');
+            $pagosPagados[] = Pago::whereMonth('fecha_pago', $mes)
+                ->whereYear('fecha_pago', $anio)
+                ->where('estado', 'pagado')
+                ->sum('monto_neto');
+            $pagosConfirmados[] = Pago::whereMonth('fecha_pago', $mes)
+                ->whereYear('fecha_pago', $anio)
+                ->where('estado', 'confirmado')
+                ->sum('monto_neto');
+            $fechaIter->addMonth();
         }
         
         // Calcular el total de pagos del mes actual para verificación
         $totalPagosMesActual = Pago::whereMonth('fecha_pago', Carbon::now()->month)
                                   ->whereYear('fecha_pago', Carbon::now()->year)
-                                  ->where('estado', 'pagado')
+                                  ->whereIn('estado', ['pagado', 'confirmado'])
                                   ->sum('monto_neto');
+
+        // Calcular resumen mensual (últimos 12 meses)
+        $resumenMensual = Pago::selectRaw("DATE_FORMAT(fecha_pago, '%Y-%m') as mes, SUM(monto_neto) as total")
+            ->whereIn('estado', ['pagado', 'confirmado'])
+            ->whereNotNull('fecha_pago')
+            ->where('fecha_pago', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+            ->groupBy('mes')
+            ->orderBy('mes', 'asc')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'mes' => $item->mes,
+                    'total' => round($item->total, 2)
+                ];
+            });
 
         return view('admin.dashboard', compact(
             'consultoresActivos',
@@ -146,8 +174,12 @@ class AdminController extends Controller
             'consultoresStats',
             'crecimientoConsultores',
             'crecimientoPagos',
-            'datosPagosMensuales',
-            'totalPagosMesActual'
+            'pagosTotales',
+            'pagosPagados',
+            'pagosConfirmados',
+            'totalPagosMesActual',
+            'resumenMensual',
+            'labelsMeses'
         ));
     }
 

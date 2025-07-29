@@ -42,7 +42,14 @@ class PagosController extends Controller
         
         // Aplicar filtros
         $query->when($estado, function($q) use ($estado) {
+            // Si el filtro es "Todos" o vacío, mostrar pagados y confirmados
+            if ($estado === 'Todos' || empty($estado)) {
+                return $q->whereIn('estado', ['pagado', 'confirmado']);
+            }
             return $q->where('estado', $estado);
+        }, function($q) {
+            // Si no se especifica filtro, mostrar pagados y confirmados
+            return $q->whereIn('estado', ['pagado', 'confirmado']);
         })
         ->when($consultorId, function($q) use ($consultorId) {
             return $q->where('consultor_id', $consultorId);
@@ -56,7 +63,8 @@ class PagosController extends Controller
         
         // Obtener resultados paginados
         $pagos = $query->paginate(15);
-        
+
+
         // Obtener consultores para los filtros
         $consultores = Usuario::where('tipo_usuario', 'consultor')
                             ->where('estado', 'activo')
@@ -76,7 +84,7 @@ class PagosController extends Controller
                 'fecha_fin' => $fechaFin,
                 'consultor_id' => $consultorId,
                 'quincena' => $quincena
-            ]
+            ],
         ]);
     }
     

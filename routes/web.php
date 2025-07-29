@@ -142,13 +142,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 // Consultor Routes (protected)
 Route::middleware(['auth', 'consultor'])->prefix('consultor')->name('consultor.')->group(function () {
-    Route::get('/dashboard', function () {
-        // Check if user is consultor
-        if (auth()->user()->tipo_usuario !== 'consultor') {
-            return redirect()->route('admin.dashboard');
-        }
-        return view('consultor.dashboard');
-    })->name('dashboard');
+    // Empresas solo lectura para consultor
+    Route::get('/empresas', [App\Http\Controllers\Consultor\EmpresaController::class, 'index'])->name('empresas.index');
+    Route::get('/dashboard', [App\Http\Controllers\Consultor\DashboardController::class, 'index'])->name('dashboard');
     
     // Horas routes
     Route::resource('horas', \App\Http\Controllers\Consultor\RegistroHorasController::class);

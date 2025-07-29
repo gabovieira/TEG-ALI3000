@@ -442,12 +442,65 @@
 <!-- Gráficos y Métricas -->
 <div class="lg:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Gráfico de Pagos Mensuales -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <h3 class="text-lg font-semibold text-[#000000] mb-4">Pagos Mensuales</h3>
-        <div class="h-64">
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-8">
+        <h2 class="text-lg font-medium text-[#000000] mb-4">Pagos Mensuales</h2>
+        <div style="height:320px;">
             <canvas id="pagosMensualesChart"></canvas>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('pagosMensualesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($labelsMeses ?? []),
+                datasets: [
+                    {
+                        label: 'Total',
+                        data: @json($pagosTotales ?? []),
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37,99,235,0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Pagados',
+                        data: @json($pagosPagados ?? []),
+                        borderColor: '#f59e42',
+                        backgroundColor: 'rgba(245,158,66,0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Confirmados',
+                        data: @json($pagosConfirmados ?? []),
+                        borderColor: '#6b7280',
+                        backgroundColor: 'rgba(107,114,128,0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+    </script>
 
     <!-- Consultores por Estado -->
     <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
