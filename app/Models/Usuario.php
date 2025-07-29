@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\EmpresaConsultor;
 
 class Usuario extends Authenticatable
 {
@@ -30,6 +31,13 @@ class Usuario extends Authenticatable
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Tipos de asignación disponibles
+     */
+    const ASIGNACION_TIEMPO_COMPLETO = 'tiempo_completo';
+    const ASIGNACION_PARCIAL = 'parcial';
+    const ASIGNACION_TEMPORAL = 'temporal';
 
     /**
      * The attributes that are mass assignable.
@@ -163,5 +171,63 @@ class Usuario extends Authenticatable
     public function isActivo()
     {
         return $this->estado === 'activo';
+    }
+
+    /**
+     * Relación con las asignaciones a empresas
+     */
+    public function asignacionesEmpresas()
+    {
+        return $this->hasMany(EmpresaConsultor::class, 'usuario_id');
+    }
+
+    /**
+     * Obtener la asignación de una empresa específica
+     */
+    public function getAsignacionEmpresa($empresaId)
+    {
+        return $this->asignacionesEmpresas()
+            ->where('empresa_id', $empresaId)
+            ->first();
+    }
+
+    /**
+     * Verificar si el consultor está asignado a tiempo completo
+     */
+    public function esTiempoCompleto($empresaId = null)
+    {
+        return $this->verificarTipoAsignacion('tiempo_completo', $empresaId);
+    }
+
+    /**
+     * Verificar si el consultor está asignado a tiempo parcial
+     */
+    public function esTiempoParcial($empresaId = null)
+    {
+        return $this->verificarTipoAsignacion('parcial', $empresaId);
+    }
+
+    /**
+     * Verificar si el consultor tiene asignación temporal
+     */
+    public function esTemporal($empresaId = null)
+    {
+        return $this->verificarTipoAsignacion('temporal', $empresaId);
+    }
+
+    /**
+     * Método auxiliar para verificar el tipo de asignación
+     */
+    protected function verificarTipoAsignacion($tipo, $empresaId = null)
+    {
+        $query = $this->asignacionesEmpresas()
+            ->where('tipo_asignacion', $tipo)
+            ->where('estado', 'activo');
+
+        if ($empresaId) {
+            $query->where('empresa_id', $empresaId);
+        }
+
+        return $query->exists();
     }
 }
