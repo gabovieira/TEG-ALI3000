@@ -3,6 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 
+// Ruta para el favicon
+Route::get('/favicon.ico', function () {
+    return response()->file(public_path('favicon.ico'), [
+        'Content-Type' => 'image/x-icon',
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+})->name('favicon');
+
 // Landing page (página principal)
 Route::get('/', function () {
     return view('landing');

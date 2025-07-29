@@ -1,5 +1,13 @@
 <?php
 
+// Forzar recarga del favicon
+if (preg_match('/favicon\.ico$/', $_SERVER['REQUEST_URI'])) {
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Content-Type: image/x-icon');
+    readfile(__DIR__.'/favicon.ico');
+    exit;
+}
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 

@@ -7,6 +7,11 @@
     
     <title>@yield('title', 'ALI3000 Consultores')</title>
     
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v=1" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=1" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{ asset('assets/img/logoali3000.png') }}?v=1">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
