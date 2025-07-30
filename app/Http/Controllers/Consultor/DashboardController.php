@@ -92,12 +92,18 @@ class DashboardController extends Controller
             ->whereIn('estado', ['pagado', 'confirmado'])
             ->sum('monto_neto');
 
+        // Obtener la tarifa por hora del usuario desde sus datos laborales
+        $tarifaPorHora = auth()->user()->datosLaborales ? number_format(auth()->user()->datosLaborales->tarifa_por_hora ?? 0, 2, '.', '') : '0.00';
+        $nivelDesarrollo = auth()->user()->datosLaborales->nivel_desarrollo ?? 'No especificado';
+        
         return view('consultor.dashboard', compact(
             'pagosTotales',
             'pagosPagados',
             'pagosConfirmados',
             'labelsMeses',
             'pagosPendientes',
+            'tarifaPorHora',
+            'nivelDesarrollo',
             'horasMesActual',
             'horasMesAnterior',
             'variacionHorasMes',

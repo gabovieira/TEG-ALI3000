@@ -52,7 +52,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-[#708090] text-sm font-medium">Tarifa por Hora</p>
-                <p class="text-3xl font-bold text-[#000000]">$25.00</p>
+                <p class="text-3xl font-bold text-[#000000]">${{ $tarifaPorHora }}</p>
             </div>
             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="mt-4 flex items-center">
-            <span class="text-green-500 text-sm font-medium">Nivel Senior</span>
+            <span class="text-green-500 text-sm font-medium">Nivel {{ ucfirst($nivelDesarrollo) }}</span>
         </div>
     </div>
 </div>
