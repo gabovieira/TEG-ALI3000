@@ -94,13 +94,25 @@
                     
                     <div class="space-y-3 max-h-96 overflow-y-auto" id="lista-consultores">
                         @foreach($consultoresDisponibles as $consultor)
-                            <div class="flex items-center p-3 bg-gray-50 rounded-lg consultor-item">
-                                <input type="checkbox" name="consultores[]" id="consultor-{{ $consultor->id }}" value="{{ $consultor->id }}"
-                                       class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                <label for="consultor-{{ $consultor->id }}" class="ml-2 block flex-grow">
-                                    <span class="font-medium text-gray-900 block">{{ $consultor->primer_nombre }} {{ $consultor->primer_apellido }}</span>
-                                    <span class="text-sm text-gray-600 block">{{ $consultor->email }}</span>
-                                </label>
+                            <div class="flex flex-col p-3 bg-gray-50 rounded-lg consultor-item space-y-2">
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="consultores[{{ $consultor->id }}][id]" id="consultor-{{ $consultor->id }}" value="{{ $consultor->id }}" 
+                                           class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 consultor-checkbox"
+                                           onchange="toggleTipoAsignacion({{ $consultor->id }})">
+                                    <label for="consultor-{{ $consultor->id }}" class="ml-2 block flex-grow cursor-pointer">
+                                        <span class="font-medium text-gray-900 block">{{ $consultor->primer_nombre }} {{ $consultor->primer_apellido }}</span>
+                                        <span class="text-sm text-gray-600 block">{{ $consultor->email }}</span>
+                                    </label>
+                                </div>
+                                <div id="tipo-asignacion-{{ $consultor->id }}" class="ml-6 hidden">
+                                    <label for="tipo-{{ $consultor->id }}" class="block text-sm font-medium text-gray-700 mb-1">Tipo de asignación</label>
+                                    <select name="consultores[{{ $consultor->id }}][tipo_asignacion]" id="tipo-{{ $consultor->id }}" 
+                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="tiempo_completo">Tiempo Completo</option>
+                                        <option value="parcial">Tiempo Parcial</option>
+                                        <option value="temporal">Temporal</option>
+                                    </select>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -125,6 +137,33 @@
             const buscarInput = document.getElementById('buscar-consultor');
             const consultorItems = document.querySelectorAll('.consultor-item');
             
+            // Función para mostrar/ocultar el selector de tipo de asignación
+            window.toggleTipoAsignacion = function(consultorId) {
+                const selectorDiv = document.getElementById(`tipo-asignacion-${consultorId}`);
+                const checkbox = document.getElementById(`consultor-${consultorId}`);
+                
+                if (checkbox.checked) {
+                    selectorDiv.classList.remove('hidden');
+                    selectorDiv.classList.add('block');
+                } else {
+                    selectorDiv.classList.remove('block');
+                    selectorDiv.classList.add('hidden');
+                }
+            };
+            
+            // Inicializar los selectores de tipo de asignación basados en checkboxes ya marcados
+            document.querySelectorAll('.consultor-checkbox').forEach(checkbox => {
+                if (checkbox.checked) {
+                    const consultorId = checkbox.value;
+                    const selectorDiv = document.getElementById(`tipo-asignacion-${consultorId}`);
+                    if (selectorDiv) {
+                        selectorDiv.classList.remove('hidden');
+                        selectorDiv.classList.add('block');
+                    }
+                }
+            });
+            
+            // Manejar la búsqueda de consultores
             buscarInput.addEventListener('input', function() {
                 const busqueda = this.value.toLowerCase();
                 

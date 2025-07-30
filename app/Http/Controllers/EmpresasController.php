@@ -373,13 +373,17 @@ class EmpresasController extends Controller
         
         $request->validate([
             'consultores' => 'nullable|array',
-            'consultores.*' => 'exists:usuarios,id'
+            'consultores.*.id' => 'required|exists:usuarios,id',
+            'consultores.*.tipo_asignacion' => 'required|in:tiempo_completo,parcial,temporal'
         ]);
         
         $consultoresSeleccionados = $request->has('consultores') ? $request->consultores : [];
         
         try {
-            foreach ($consultoresSeleccionados as $consultorId) {
+            foreach ($consultoresSeleccionados as $consultorData) {
+                $consultorId = $consultorData['id'];
+                $tipoAsignacion = $consultorData['tipo_asignacion'];
+                
                 // Verificar si ya existe la asignación
                 $existeAsignacion = DB::table('empresa_consultores')
                     ->where('usuario_id', $consultorId)
@@ -389,55 +393,61 @@ class EmpresasController extends Controller
                 if (!$existeAsignacion) {
                     $empresa->consultores()->attach($consultorId, [
                         'fecha_asignacion' => now(),
-                        'tipo_asignacion' => 'principal',
+                        'tipo_asignacion' => $tipoAsignacion,
                         'estado' => 'activo',
                         'observaciones' => 'Asignación desde gestión de consultores'
+                    ]);
+                } else {
+                    // Actualizar la asignación existente si es necesario
+                    $empresa->consultores()->updateExistingPivot($consultorId, [
+                        'tipo_asignacion' => $tipoAsignacion,
+                        'estado' => 'activo',
+                        'observaciones' => 'Actualización de asignación desde gestión de consultores'
                     ]);
                 }
             }
             
             return redirect()->route('admin.empresas.show', $empresa->id)
                 ->with('success', 'Consultores asignados correctamente');
-                
         } catch (\Exception $e) {
             return back()->with('error', 'Error al asignar consultores: ' . $e->getMessage());
         }
     }
 
-    /**
-     * Eliminar una asignación específica entre empresa y consultor
-     */
-    public function eliminarAsignacion($empresaId, $usuarioId)
-    {
-        $empresa = Empresa::findOrFail($empresaId);
-        
-        // Verificar si hay registros de horas para esta asignación
-        $tieneHoras = false;
-        
-        // Verificar si la tabla registro_horas existe
-        if (Schema::hasTable('registro_horas')) {
-            try {
-                $tieneHoras = DB::table('registro_horas')
-                    ->where('usuario_id', $usuarioId)
-                    ->where('empresa_id', $empresaId)
-                    ->exists();
-            } catch (\Exception $e) {
-                \Log::error('Error al verificar registro_horas: ' . $e->getMessage());
-            }
-        }
-        
-        if ($tieneHoras) {
-            return back()->with('error', 
-                'No se puede eliminar la asignación porque existen registros de horas asociados a este consultor y empresa');
-        }
-        
+/**
+ * Eliminar una asignación específica entre empresa y consultor
+ */
+public function eliminarAsignacion($empresaId, $usuarioId)
+{
+    $empresa = Empresa::findOrFail($empresaId);
+    
+    // Verificar si hay registros de horas para esta asignación
+    $tieneHoras = false;
+    
+    // Verificar si la tabla registro_horas existe
+    if (Schema::hasTable('registro_horas')) {
         try {
-            $empresa->consultores()->detach($usuarioId);
-            
-            return back()->with('success', 'Asignación eliminada correctamente');
-            
+            $tieneHoras = DB::table('registro_horas')
+                ->where('usuario_id', $usuarioId)
+                ->where('empresa_id', $empresaId)
+                ->exists();
         } catch (\Exception $e) {
-            return back()->with('error', 'Error al eliminar la asignación: ' . $e->getMessage());
+            \Log::error('Error al verificar registro_horas: ' . $e->getMessage());
         }
     }
+    
+    if ($tieneHoras) {
+        return back()->with('error', 
+            'No se puede eliminar la asignación porque existen registros de horas asociados a este consultor y empresa');
+    }
+    
+    try {
+        $empresa->consultores()->detach($usuarioId);
+        
+        return back()->with('success', 'Asignación eliminada correctamente');
+        
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al eliminar la asignación: ' . $e->getMessage());
+    }
+}
 }
