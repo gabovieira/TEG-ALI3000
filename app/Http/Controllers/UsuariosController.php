@@ -217,6 +217,11 @@ class UsuariosController extends Controller
             'nivel_desarrollo' => 'nullable|in:junior,semi-senior,senior'
         ]);
         
+        // Si el teléfono está vacío, establecerlo como null
+        if ($request->has('telefono') && empty($request->telefono)) {
+            $request->merge(['telefono' => null]);
+        }
+        
         DB::beginTransaction();
         
         try {
@@ -225,11 +230,12 @@ class UsuariosController extends Controller
             $usuario->email = $request->email;
             $usuario->tipo_usuario = $request->tipo_usuario;
             $usuario->estado = $request->estado;
-            $usuario->telefono = $request->telefono;
             
             if ($request->filled('password')) {
                 $usuario->password_hash = Hash::make($request->password);
             }
+            
+            // No actualizamos el teléfono aquí, se manejará en datos_laborales
             
             $usuario->save();
             
@@ -242,6 +248,7 @@ class UsuariosController extends Controller
                     $datosLaborales->usuario_id = $usuario->id;
                 }
                 
+                // Actualizar datos laborales
                 if ($request->filled('tarifa_por_hora')) {
                     $datosLaborales->tarifa_por_hora = $request->tarifa_por_hora;
                 }
@@ -250,9 +257,8 @@ class UsuariosController extends Controller
                     $datosLaborales->nivel_desarrollo = $request->nivel_desarrollo;
                 }
                 
-                if ($request->filled('telefono')) {
-                    $datosLaborales->telefono_personal = $request->telefono;
-                }
+                // Actualizar el teléfono en datos_laborales
+                $datosLaborales->telefono_personal = $request->telefono; // Incluso si es null para limpiar el campo
                 
                 $datosLaborales->save();
                 
