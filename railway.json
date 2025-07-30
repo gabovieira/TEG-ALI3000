@@ -2,9 +2,7 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm install --production=false && npm run build",
-    "startCommand": "php artisan serve --host=0.0.0.0 --port=$PORT",
-    "installCommand": "composer install --ignore-platform-reqs"
+    "buildCommand": "npm install --production=false && npm run build && composer install --ignore-platform-reqs --no-interaction --no-dev --optimize-autoloader"
   },
   "deploy": {
     "startCommand": "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT",

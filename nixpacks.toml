@@ -1,0 +1,30 @@
+[phases.setup]
+cmds = [
+  "apt-get update && apt-get install -y git unzip",
+  "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+]
+
+[phases.install]
+cmds = [
+  "composer install --ignore-platform-reqs --no-interaction --no-dev --optimize-autoloader",
+  "npm install --production=false"
+]
+
+[phases.build]
+cmds = [
+  "npm run build",
+  "php artisan config:cache",
+  "php artisan route:cache",
+  "php artisan view:cache"
+]
+
+[start]
+cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+
+[build.environment]
+NODE_VERSION = "18"
+PHP_VERSION = "8.2"
+COMPOSER_VERSION = "2.6.5"
+
+[build.args]
+NIXPKGS_ARCH = "x86_64-linux"
