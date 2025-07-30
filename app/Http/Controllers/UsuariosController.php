@@ -180,7 +180,7 @@ class UsuariosController extends Controller
      */
     public function edit($id)
     {
-        $usuario = Usuario::findOrFail($id);
+        $usuario = Usuario::with('datosLaborales')->findOrFail($id);
         $empresas = Empresa::where('estado', 'activa')->orderBy('nombre')->get();
         $empresasAsignadas = [];
         
@@ -191,7 +191,8 @@ class UsuariosController extends Controller
         return view('admin.usuarios.edit', [
             'usuario' => $usuario,
             'empresas' => $empresas,
-            'empresasAsignadas' => $empresasAsignadas
+            'empresasAsignadas' => $empresasAsignadas,
+            'datosLaborales' => $usuario->datosLaborales
         ]);
     }
 
@@ -211,7 +212,9 @@ class UsuariosController extends Controller
             'telefono' => 'nullable|string|max:20',
             'password' => 'nullable|min:8',
             'empresas' => 'nullable|array',
-            'empresas.*' => 'exists:empresas,id'
+            'empresas.*' => 'exists:empresas,id',
+            'tarifa_por_hora' => 'nullable|numeric|min:0',
+            'nivel_desarrollo' => 'nullable|in:junior,semi-senior,senior'
         ]);
         
         DB::beginTransaction();
@@ -230,8 +233,30 @@ class UsuariosController extends Controller
             
             $usuario->save();
             
-            // Actualizar empresas asignadas si es consultor
+            // Actualizar o crear datos laborales si es consultor
             if ($usuario->tipo_usuario == 'consultor') {
+                $datosLaborales = $usuario->datosLaborales;
+                
+                if (!$datosLaborales) {
+                    $datosLaborales = new \App\Models\DatosLaborales();
+                    $datosLaborales->usuario_id = $usuario->id;
+                }
+                
+                if ($request->filled('tarifa_por_hora')) {
+                    $datosLaborales->tarifa_por_hora = $request->tarifa_por_hora;
+                }
+                
+                if ($request->filled('nivel_desarrollo')) {
+                    $datosLaborales->nivel_desarrollo = $request->nivel_desarrollo;
+                }
+                
+                if ($request->filled('telefono')) {
+                    $datosLaborales->telefono_personal = $request->telefono;
+                }
+                
+                $datosLaborales->save();
+                
+                // Actualizar empresas asignadas
                 $empresasSeleccionadas = $request->has('empresas') ? $request->empresas : [];
                 $usuario->empresas()->sync($empresasSeleccionadas);
             } else {

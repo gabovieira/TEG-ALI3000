@@ -120,6 +120,31 @@
                 </div>
             </div>
             
+            <!-- Datos laborales (solo para consultores) -->
+            <div id="datos-laborales-section" class="border-t border-gray-200 pt-6 mt-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Datos Laborales</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="tarifa_por_hora" class="block text-sm font-medium text-gray-700 mb-1">Tarifa por Hora (USD)</label>
+                        <input type="number" name="tarifa_por_hora" id="tarifa_por_hora" 
+                               value="{{ old('tarifa_por_hora', optional($datosLaborales)->tarifa_por_hora) }}" step="0.01" min="0"
+                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="text-xs text-gray-500 mt-1">Ingrese la tarifa por hora del consultor</p>
+                    </div>
+                    
+                    <div>
+                        <label for="nivel_desarrollo" class="block text-sm font-medium text-gray-700 mb-1">Nivel de Desarrollo</label>
+                        <select name="nivel_desarrollo" id="nivel_desarrollo"
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="junior" {{ old('nivel_desarrollo', optional($datosLaborales)->nivel_desarrollo) == 'junior' ? 'selected' : '' }}>Junior</option>
+                            <option value="semi-senior" {{ old('nivel_desarrollo', optional($datosLaborales)->nivel_desarrollo) == 'semi-senior' ? 'selected' : '' }}>Semi-Senior</option>
+                            <option value="senior" {{ old('nivel_desarrollo', optional($datosLaborales)->nivel_desarrollo) == 'senior' ? 'selected' : '' }}>Senior</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Asignación de empresas (solo para consultores) -->
             <div id="empresas-section" class="border-t border-gray-200 pt-6 mt-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Asignación de Empresas</h3>
@@ -154,24 +179,27 @@
     </div>
     
     <script>
-        // Mostrar/ocultar sección de empresas según el tipo de usuario
+        // Mostrar/ocultar secciones según el tipo de usuario
         document.addEventListener('DOMContentLoaded', function() {
             const tipoUsuarioSelect = document.getElementById('tipo_usuario');
             const empresasSection = document.getElementById('empresas-section');
+            const datosLaboralesSection = document.getElementById('datos-laborales-section');
             
-            function toggleEmpresasSection() {
+            function toggleSections() {
                 if (tipoUsuarioSelect.value === 'consultor') {
                     empresasSection.style.display = 'block';
+                    datosLaboralesSection.style.display = 'block';
                 } else {
                     empresasSection.style.display = 'none';
+                    datosLaboralesSection.style.display = 'none';
                 }
             }
             
             // Ejecutar al cargar la página
-            toggleEmpresasSection();
+            toggleSections();
             
             // Ejecutar cuando cambie el tipo de usuario
-            tipoUsuarioSelect.addEventListener('change', toggleEmpresasSection);
+            tipoUsuarioSelect.addEventListener('change', toggleSections);
         });
     </script>
 @endsection
