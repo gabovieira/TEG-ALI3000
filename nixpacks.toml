@@ -1,23 +1,43 @@
 [phases.setup]
 cmds = [
-  "apt-get update && apt-get install -y git unzip",
-  "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+  "apt-get update",
+  "apt-get install -y git unzip",
+  "php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"",
+  "php composer-setup.php --install-dir=/usr/local/bin --filename=composer",
+  "php -r \"unlink('composer-setup.php');\""
 ]
 
 [phases.install]
 cmds = [
-  "composer install --ignore-platform-reqs --no-interaction --no-dev --optimize-autoloader",
-  "rm -f package-lock.json",
-  "npm install --production=false --legacy-peer-deps",
-  "npm install @tailwindcss/forms@0.5.10 mini-svg-data-uri@1.4.4 --save-dev"
+  "composer install --ignore-platform-reqs --no-interaction --no-dev --optimize-autoloader --no-scripts"
 ]
 
 [phases.build]
 cmds = [
+  # Instalar Node.js manualmente para asegurar la versión correcta
+  "curl -fsSL https://deb.nodesource.com/setup_18.x | bash -",
+  "apt-get install -y nodejs",
+  
+  # Configurar npm
+  "npm install -g npm@latest",
+  "npm config set update-notifier false",
+  
+  # Instalar dependencias de Node
+  "rm -f package-lock.json",
+  "npm install --production=false --legacy-peer-deps",
+  
+  # Construir assets
   "npm run build",
+  
+  # Optimizar Laravel
   "php artisan config:cache",
   "php artisan route:cache",
-  "php artisan view:cache"
+  "php artisan view:cache",
+  
+  # Limpiar caché
+  "php artisan cache:clear",
+  "php artisan config:clear",
+  "php artisan view:clear"
 ]
 
 [start]
@@ -28,5 +48,11 @@ NODE_VERSION = "18"
 PHP_VERSION = "8.2"
 COMPOSER_VERSION = "2.6.5"
 
+# Configuración adicional para Nixpacks
 [build.args]
 NIXPKGS_ARCH = "x86_64-linux"
+
+# Configuración de entorno para la construcción
+[build.environment_variables]
+NPM_CONFIG_PRODUCTION = "false"
+NODE_ENV = "development"
