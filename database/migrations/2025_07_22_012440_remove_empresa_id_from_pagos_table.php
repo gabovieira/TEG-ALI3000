@@ -12,24 +12,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Primero, desactivamos temporalmente las verificaciones de claves foráneas
+        // Desactivar verificaciones de claves foráneas temporalmente
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
         // Primero verificamos si la columna empresa_id existe
         if (Schema::hasColumn('pagos', 'empresa_id')) {
-            // Verificamos si existe la restricción de clave foránea
-            $constraint = DB::select(
+            // Obtenemos todas las restricciones de clave foránea en la tabla
+            $constraints = DB::select(
                 "SELECT CONSTRAINT_NAME 
-                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
                 WHERE TABLE_NAME = 'pagos' 
-                AND COLUMN_NAME = 'empresa_id' 
-                AND REFERENCED_TABLE_NAME IS NOT NULL"
+                AND CONSTRAINT_TYPE = 'FOREIGN KEY'"
             );
 
-            Schema::table('pagos', function (Blueprint $table) use ($constraint) {
-                // Si existe la restricción, la eliminamos
-                if (count($constraint) > 0) {
-                    $table->dropForeign([$constraint[0]->CONSTRAINT_NAME]);
+            Schema::table('pagos', function (Blueprint $table) use ($constraints) {
+                // Intentamos eliminar cualquier restricción que pueda estar relacionada con empresa_id
+                foreach ($constraints as $constraint) {
+                    try {
+                        $table->dropForeign($constraint->CONSTRAINT_NAME);
+                    } catch (\Exception $e) {
+                        // Ignorar si no se puede eliminar la restricción
+                        continue;
+                    }
                 }
 
                 // Luego intentamos eliminar el índice compuesto si existe
@@ -44,7 +48,7 @@ return new class extends Migration
             });
         }
 
-        // Reactivamos las verificaciones de claves foráneas
+        // Reactivar verificaciones de claves foráneas
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
     /**
