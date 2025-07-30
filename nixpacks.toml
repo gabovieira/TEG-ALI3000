@@ -7,7 +7,9 @@ cmds = [
 [phases.install]
 cmds = [
   "composer install --ignore-platform-reqs --no-interaction --no-dev --optimize-autoloader",
-  "npm install --production=false"
+  "rm -f package-lock.json",
+  "npm install --production=false --legacy-peer-deps",
+  "npm install @tailwindcss/forms@0.5.10 mini-svg-data-uri@1.4.4 --save-dev"
 ]
 
 [phases.build]
