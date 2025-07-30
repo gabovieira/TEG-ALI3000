@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,21 +12,41 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Primero eliminamos la restricción de clave foránea
-        Schema::table('pagos', function (Blueprint $table) {
-            // Verificamos si la restricción existe antes de intentar eliminarla
-            if (DB::getDriverName() !== 'sqlite') {
-                $table->dropForeign(['empresa_id']);
-            }
-            
-            // Eliminamos el índice compuesto si existe
-            $table->dropIndex(['usuario_id', 'empresa_id']);
-            
-            // Finalmente eliminamos la columna
-            $table->dropColumn('empresa_id');
-        });
-    }
+        // Primero, desactivamos temporalmente las verificaciones de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
+        // Primero verificamos si la columna empresa_id existe
+        if (Schema::hasColumn('pagos', 'empresa_id')) {
+            // Verificamos si existe la restricción de clave foránea
+            $constraint = DB::select(
+                "SELECT CONSTRAINT_NAME 
+                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                WHERE TABLE_NAME = 'pagos' 
+                AND COLUMN_NAME = 'empresa_id' 
+                AND REFERENCED_TABLE_NAME IS NOT NULL"
+            );
+
+            Schema::table('pagos', function (Blueprint $table) use ($constraint) {
+                // Si existe la restricción, la eliminamos
+                if (count($constraint) > 0) {
+                    $table->dropForeign([$constraint[0]->CONSTRAINT_NAME]);
+                }
+
+                // Luego intentamos eliminar el índice compuesto si existe
+                try {
+                    $table->dropIndex('pagos_usuario_id_empresa_id_index');
+                } catch (\Exception $e) {
+                    // Ignorar si el índice no existe
+                }
+
+                // Finalmente eliminamos la columna
+                $table->dropColumn('empresa_id');
+            });
+        }
+
+        // Reactivamos las verificaciones de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+    }
     /**
      * Reverse the migrations.
      */
