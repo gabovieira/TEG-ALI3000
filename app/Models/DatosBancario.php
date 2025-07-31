@@ -21,8 +21,8 @@ class DatosBancario extends Model
         'correo',
         'telefono',
         'es_principal',
-        'estado',
         'observaciones'
+        // Se eliminó 'estado' que no existe en la tabla
     ];
     
     protected $casts = [
