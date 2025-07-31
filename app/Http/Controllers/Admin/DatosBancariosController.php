@@ -76,18 +76,10 @@ class DatosBancariosController extends Controller
                 'numero_cuenta' => $request->numero_cuenta,
                 'cedula_rif' => $request->cedula_rif,
                 'titular' => $request->titular,
-                'es_principal' => $request->boolean('es_principal', false)
-                // Solo incluir los campos que existen en la tabla
+                'es_principal' => $request->boolean('es_principal', false),
+                // Solo estos campos existen en la tabla según la estructura proporcionada
+                // No incluir: correo, telefono, observaciones, estado
             ];
-            
-            // Agregar campos opcionales solo si se proporcionan
-            if ($request->has('correo')) {
-                $datos['correo'] = $request->correo;
-            }
-            
-            if ($request->has('telefono')) {
-                $datos['telefono'] = $request->telefono;
-            }
             
             // Crear el registro
             $datosBancarios = DatosBancario::create($datos);
