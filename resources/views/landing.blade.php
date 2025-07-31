@@ -11,11 +11,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/motion-tailwind/css/leaflet.css">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/loopple/loopple.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/landing-styles.css') }}">
 </head>
 
 <body>
-    <div class="container flex flex-col mx-auto">
-        <div class="relative flex flex-wrap items-center justify-between w-full bg-white group py-7 shrink-0">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container mx-auto px-4">
+            <div class="relative flex flex-wrap items-center justify-between w-full group py-7">
             <div>
                 <img class="h-20" src="{{ asset('assets/img/logoali3000.png') }}" alt="Logo ALI3000">
             </div>
@@ -43,62 +46,77 @@
                 <a href="{{ route('registro.token') }}" class="flex items-center px-4 py-2 text-sm font-bold rounded-xl" style="background:#FF6347; color:#fff;">Registrarse</a>
             </div>
         </div>
-        <div class="grid w-full grid-cols-1 my-auto mt-12 mb-8 md:grid-cols-2 xl:gap-14 md:gap-5">
-            <div class="flex flex-col justify-center col-span-1 text-center lg:text-start">
-                <div class="flex items-center justify-center mb-4 lg:justify-normal">
-                  
+            <div class="grid w-full grid-cols-1 my-auto mt-12 mb-8 md:grid-cols-2 xl:gap-14 md:gap-5">
+                <div class="flex flex-col justify-center col-span-1 text-center lg:text-start">
+                    <h1 class="hero-title">Transformamos tu visión en resultados</h1>
+                    <p class="text-xl text-slate-600 mb-8">Soluciones tecnológicas a medida para impulsar tu negocio</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#contacto" class="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-center">
+                            Contáctanos
+                        </a>
+                        <a href="#nosotros" class="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-300 text-center">
+                            Conócenos más
+                        </a>
+                    </div>
                 </div>
-                <h1 class="mb-8 text-4xl font-extrabold leading-tight lg:text-6xl" style="color:#000000;">Transformamos tu visión en resultados</h1>
-
-          
-            </div>
-            <div class="items-center justify-end hidden col-span-1 md:flex">
-                <img class="w-4/5 rounded-md" src="{{ asset('assets/img/landing.svg') }}" alt="Imagen principal ALI3000">
+                <div class="items-center justify-end hidden col-span-1 md:flex">
+                    <img class="w-4/5 rounded-lg shadow-xl" src="{{ asset('assets/img/landing.svg') }}" alt="Imagen principal ALI3000">
+                </div>
             </div>
         </div>
+    </div>
   <!-- Sección: Nosotros -->
-  <section class="w-full bg-white py-24">
-            <div class="container mx-auto max-w-4xl flex flex-col items-center text-center gap-8 px-4">
-                <h2 class="text-4xl font-extrabold" style="color:#000000;">¿Quiénes somos?</h2>
-                <div class="h-1 w-20 bg-orange-500 rounded-full"></div>
-                <p class="text-lg font-medium leading-8" style="color:#708090;">
-                    ALI 3000 CONSULTORES, C.A. es una empresa venezolana dedicada a la formación y asignación de talento humano especializado en áreas tecnológicas como desarrollo de software, análisis de datos, soporte técnico y consultoría de sistemas. A través de nuestro modelo formativo-práctico, capacitamos profesionales que luego son ubicados en empresas clientes bajo esquemas de contratación por horas o proyectos, contribuyendo al éxito de organizaciones públicas y privadas.
-                </p>
+  <section id="nosotros" class="landing-section nosotros-section">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto text-center">
+                <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">Sobre Nosotros</span>
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">¿Quiénes somos?</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-8"></div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        En <span class="font-semibold text-blue-600">ALI 3000 CONSULTORES, C.A.</span> nos especializamos en la formación y asignación de talento humano de alto nivel en el ámbito tecnológico. Nuestro enfoque se centra en áreas clave como el desarrollo de software, análisis de datos, soporte técnico y consultoría de sistemas.
+                    </p>
+                    <p class="text-gray-600">
+                        A través de nuestro innovador <span class="font-medium text-gray-800">modelo formativo-práctico</span>, capacitamos a profesionales que posteriormente son integrados en empresas líderes bajo esquemas flexibles de contratación por horas o proyectos, impulsando así la transformación digital y el éxito sostenible de organizaciones tanto del sector público como privado.
+                    </p>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
         <!-- Sección: Misión y Visión -->
-        <section class="w-full bg-gray-50 py-24">
+        <section class="landing-section mision-vision-section">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold" style="color:#4682B4;">Nuestros Principios</h2>
-                    <div class="h-1 w-20 bg-orange-500 rounded-full mx-auto mt-4"></div>
+                    <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">Nuestro Compromiso</span>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">Misión y Visión</h2>
+                    <div class="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto"></div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl mx-auto">
-                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    <div class="card-mision-vision">
                         <div class="flex flex-col items-center text-center gap-6">
-                            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl flex items-center justify-center shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold" style="color:#4682B4;">Misión</h3>
-                            <p class="text-base font-medium leading-7" style="color:#708090;">
+                            <h3 class="text-2xl font-bold text-gray-800">Nuestra Misión</h3>
+                            <p class="text-gray-600 leading-relaxed">
                                 Capacitar, desarrollar y asignar talento humano altamente calificado en el área de tecnología, adaptando sus capacidades a las necesidades del mercado laboral nacional e internacional, mediante un modelo de formación integral basado en la experiencia práctica y la excelencia técnica.
                             </p>
                         </div>
                     </div>
                     
-                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="card-mision-vision">
                         <div class="flex flex-col items-center text-center gap-6">
-                            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl flex items-center justify-center shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold" style="color:#4682B4;">Visión</h3>
-                            <p class="text-base font-medium leading-7" style="color:#708090;">
+                            <h3 class="text-2xl font-bold text-gray-800">Nuestra Visión</h3>
+                            <p class="text-gray-600 leading-relaxed">
                                 Ser reconocidos como la organización de referencia en Latinoamérica en la formación y gestión de profesionales tecnológicos, destacándonos por nuestra calidad humana, capacidad de respuesta y compromiso con la transformación digital de nuestros aliados estratégicos.
                             </p>
                         </div>
@@ -108,48 +126,70 @@
         </section>
 
         <!-- Sección: Valores -->
-        <section class="w-full bg-white py-24">
+        <section class="landing-section valores-section">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold" style="color:#4682B4;">Nuestros Valores</h2>
-                    <div class="h-1 w-20 bg-orange-500 rounded-full mx-auto mt-4"></div>
+                    <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">Nuestros Pilares</span>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">Valores Corporativos</h2>
+                    <div class="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto"></div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="bg-gray-50 p-6 rounded-lg text-center">
-                        <h3 class="text-xl font-semibold mb-3" style="color:#4682B4;">Excelencia</h3>
-                        <p class="text-sm" style="color:#708090;">Buscamos la máxima calidad en todo lo que hacemos</p>
+                    <div class="valor-card">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 mb-4 mx-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Excelencia</h3>
+                        <p class="text-gray-600">Nos esforzamos por superar expectativas, manteniendo los más altos estándares de calidad en cada proyecto y servicio que ofrecemos.</p>
                     </div>
                     
-                    <div class="bg-gray-50 p-6 rounded-lg text-center">
-                        <h3 class="text-xl font-semibold mb-3" style="color:#4682B4;">Innovación</h3>
-                        <p class="text-sm" style="color:#708090;">Creamos soluciones tecnológicas vanguardistas</p>
+                    <div class="valor-card">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-50 mb-4 mx-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Innovación</h3>
+                        <p class="text-gray-600">Abrazamos el cambio y la creatividad para desarrollar soluciones tecnológicas vanguardistas que generen valor real.</p>
                     </div>
                     
-                    <div class="bg-gray-50 p-6 rounded-lg text-center">
-                        <h3 class="text-xl font-semibold mb-3" style="color:#4682B4;">Compromiso</h3>
-                        <p class="text-sm" style="color:#708090;">Cumplimos con lo prometido a nuestros clientes</p>
+                    <div class="valor-card">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 mb-4 mx-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Compromiso</h3>
+                        <p class="text-gray-600">Cumplimos con lo prometido, construyendo relaciones a largo plazo basadas en la confianza y la transparencia con nuestros clientes y colaboradores.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Sección: Contactos -->
-        <section class="w-full bg-gray-50 py-24">
-            <div class="container mx-auto max-w-4xl px-4">
-                <div class="flex flex-col items-center text-center gap-8 bg-white p-12 rounded-xl shadow-md">
-                    <h2 class="text-3xl font-bold" style="color:#4682B4;">Contáctanos</h2>
-                    <div class="h-1 w-20 bg-orange-500 rounded-full"></div>
-                    <p class="text-lg font-medium leading-8" style="color:#708090;">
+        <section id="contacto" class="landing-section contacto-section">
+            <div class="container mx-auto px-4">
+                <div class="contacto-container">
+                    <h2 class="contacto-title">Contáctanos</h2>
+                    <div class="h-1 w-20 bg-white rounded-full mb-8 mx-auto"></div>
+                    <p class="contacto-text">
                         ¿Tienes dudas o quieres trabajar con nosotros?<br>
-                        Estamos aquí para ayudarte en tu transformación digital.
+                        Nuestro equipo está listo para ayudarte en tu transformación digital.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 mt-4">
-                        <a href="mailto:info@ali3000.com" class="px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-300">
-                            <i class="fas fa-envelope mr-2"></i> info@ali3000.com
+                    <div class="flex flex-wrap justify-center gap-4 mt-8">
+                        <a href="mailto:info@ali3000.com" class="btn-contacto btn-email">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            info@ali3000.com
                         </a>
-                        <a href="#" class="px-6 py-3 border border-orange-500 text-orange-500 rounded-lg font-medium hover:bg-orange-500 hover:text-white transition-colors duration-300">
-                            <i class="fas fa-phone-alt mr-2"></i> Formulario de contacto
+                        <a href="#" class="btn-contacto btn-form">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            +1 234 567 890
                         </a>
                     </div>
                 </div>

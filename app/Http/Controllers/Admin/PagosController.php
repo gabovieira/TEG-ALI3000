@@ -42,14 +42,14 @@ class PagosController extends Controller
         
         // Aplicar filtros
         $query->when($estado, function($q) use ($estado) {
-            // Si el filtro es "Todos" o vacío, mostrar pagados y confirmados
+            // Si el filtro es "Todos" o vacío, mostrar todos los estados
             if ($estado === 'Todos' || empty($estado)) {
-                return $q->whereIn('estado', ['pagado', 'confirmado']);
+                return $q; // No aplicar filtro de estado
             }
             return $q->where('estado', $estado);
         }, function($q) {
-            // Si no se especifica filtro, mostrar pagados y confirmados
-            return $q->whereIn('estado', ['pagado', 'confirmado']);
+            // Si no se especifica filtro, mostrar todos los estados
+            return $q; // No aplicar filtro de estado
         })
         ->when($consultorId, function($q) use ($consultorId) {
             return $q->where('consultor_id', $consultorId);
