@@ -28,6 +28,22 @@ class RegistroHorasSeeder extends Seeder
             return;
         }
         
+        // Obtener el usuario con ID 2 para generar horas no aprobadas
+        $usuarioNoAprobado = Usuario::find(2);
+        
+        if (!$usuarioNoAprobado) {
+            $this->command->info('No se encontró el usuario con ID 2 para generar horas no aprobadas.');
+            return;
+        }
+        
+        // Obtener las empresas asignadas al usuario con ID 2
+        $empresasUsuario2 = $usuarioNoAprobado->empresas;
+        
+        if ($empresasUsuario2->isEmpty()) {
+            $this->command->info('El usuario con ID 2 no tiene empresas asignadas.');
+            return;
+        }
+        
         // Obtener todas las empresas activas
         $empresas = Empresa::where('estado', 'activa')->get();
         
@@ -58,8 +74,59 @@ class RegistroHorasSeeder extends Seeder
         // Contador para registros creados
         $registrosCreados = 0;
         
-        // Para cada consultor
+        // Generar horas NO aprobadas para el usuario con ID 2
+        $this->command->info("Generando horas NO aprobadas para el usuario ID 2: {$usuarioNoAprobado->primer_nombre} {$usuarioNoAprobado->primer_apellido}");
+        
+        // Para cada día laborable en el rango de fechas
+        $fechaActual = clone $fechaInicio;
+        while ($fechaActual->lte($fechaFin)) {
+            // Saltar fines de semana
+            if ($fechaActual->isWeekend()) {
+                $fechaActual->addDay();
+                continue;
+            }
+            
+            // 90% de probabilidad de registrar horas para este día
+            if (rand(1, 100) <= 90) {
+                // Elegir una empresa aleatoria de las asignadas al usuario
+                $empresa = $empresasUsuario2->random();
+                
+                // Generar horas aleatorias entre 4 y 8
+                $horas = rand(4, 8);
+                
+                // Verificar si ya existe un registro para este usuario, empresa y fecha
+                $registroExistente = RegistroHoras::where('usuario_id', $usuarioNoAprobado->id)
+                                                ->where('empresa_id', $empresa->id)
+                                                ->where('fecha', $fechaActual->format('Y-m-d'))
+                                                ->first();
+                
+                if (!$registroExistente) {
+                    // Crear el registro de horas NO aprobado
+                    RegistroHoras::create([
+                        'usuario_id' => $usuarioNoAprobado->id,
+                        'empresa_id' => $empresa->id,
+                        'fecha' => $fechaActual->format('Y-m-d'),
+                        'horas_trabajadas' => $horas,
+                        'descripcion_actividades' => $this->generarDescripcionAleatoria(),
+                        'estado' => 'pendiente', // Siempre pendiente para este usuario
+                        'tipo_registro' => 'manual',
+                        'fecha_creacion' => now(),
+                    ]);
+                    
+                    $registrosCreados++;
+                }
+            }
+            
+            $fechaActual->addDay();
+        }
+        
+        // Ahora generar horas para los demás consultores (aprobadas)
         foreach ($consultores as $consultor) {
+            // Saltar el usuario con ID 2 ya que ya generamos sus horas
+            if ($consultor->id == 2) {
+                continue;
+            }
+            
             // Obtener las empresas asignadas al consultor
             $empresasConsultor = $consultor->empresas;
             
@@ -99,7 +166,7 @@ class RegistroHorasSeeder extends Seeder
                             'fecha' => $fechaActual->format('Y-m-d'),
                             'horas_trabajadas' => $horas,
                             'descripcion_actividades' => $this->generarDescripcionAleatoria(),
-                            'estado' => $this->generarEstadoAleatorio(),
+                            'estado' => 'aprobado', // Siempre aprobado para los demás usuarios
                             'tipo_registro' => 'manual',
                             'fecha_creacion' => now(),
                         ]);
