@@ -18,11 +18,9 @@ class DatosBancario extends Model
         'numero_cuenta',
         'cedula_rif',
         'titular',
-        'correo',
-        'telefono',
-        'es_principal',
-        'observaciones'
-        // Se eliminó 'estado' que no existe en la tabla
+        'es_principal'
+        // Solo estos campos existen en la tabla según la estructura proporcionada
+        // No incluir: correo, telefono, observaciones, estado
     ];
     
     protected $casts = [
