@@ -16,9 +16,9 @@
 
 <body>
     <!-- Hero Section -->
-    <div class="hero-section">
+    <div class="hero-section" style="padding: 4rem 0 2rem;">
         <div class="container mx-auto px-4">
-            <div class="relative flex flex-wrap items-center justify-between w-full group py-7">
+            <div class="relative flex flex-wrap items-center justify-between w-full group py-4">
             <div>
                 <img class="h-20" src="{{ asset('assets/img/logoali3000.png') }}" alt="Logo ALI3000">
             </div>
@@ -49,13 +49,10 @@
             <div class="grid w-full grid-cols-1 my-auto mt-12 mb-8 md:grid-cols-2 xl:gap-14 md:gap-5">
                 <div class="flex flex-col justify-center col-span-1 text-center lg:text-start">
                     <h1 class="hero-title">Transformamos tu visión en resultados</h1>
-                    <p class="text-xl text-slate-600 mb-8">Soluciones tecnológicas a medida para impulsar tu negocio</p>
+                    <p class="text-xl text-slate-600 mb-6">Soluciones tecnológicas a medida para impulsar tu negocio</p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                         <a href="#contacto" class="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-center">
                             Contáctanos
-                        </a>
-                        <a href="#nosotros" class="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-300 text-center">
-                            Conócenos más
                         </a>
                     </div>
                 </div>
