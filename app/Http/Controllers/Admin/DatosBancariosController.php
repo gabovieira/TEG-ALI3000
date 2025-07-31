@@ -57,7 +57,10 @@ class DatosBancariosController extends Controller
             'numero_cuenta' => 'required|string|max:30',
             'cedula_rif' => 'required|string|max:20',
             'titular' => 'required|string|max:100',
-            'es_principal' => 'boolean'
+            'es_principal' => 'sometimes|boolean',
+            'correo' => 'nullable|email|max:100',
+            'telefono' => 'nullable|string|max:20',
+            'observaciones' => 'nullable|string|max:255'
         ]);
         
         try {
@@ -65,21 +68,27 @@ class DatosBancariosController extends Controller
             $consultor = Usuario::where('tipo_usuario', 'consultor')
                               ->findOrFail($consultorId);
             
-            $datosBancarios = new DatosBancario([
+            // Preparar datos con valores por defecto
+            $datos = [
                 'usuario_id' => $consultorId,
                 'banco' => $request->banco,
                 'tipo_cuenta' => $request->tipo_cuenta,
                 'numero_cuenta' => $request->numero_cuenta,
                 'cedula_rif' => $request->cedula_rif,
                 'titular' => $request->titular,
-                'es_principal' => $request->has('es_principal') ? true : false
-            ]);
+                'es_principal' => $request->boolean('es_principal', false),
+                'correo' => $request->correo ?? null,
+                'telefono' => $request->telefono ?? null,
+                'observaciones' => $request->observaciones ?? null,
+                'estado' => 'activo'
+            ];
             
-            $datosBancarios->save();
+            // Crear el registro
+            $datosBancarios = DatosBancario::create($datos);
             
             // Si es la cuenta principal, desmarcar las demás
             if ($datosBancarios->es_principal) {
-                $datosBancarios->establecerComoPrincipal();
+                $datosBancarios->marcarComoPrincipal();
             }
             
             return redirect()->route('admin.datos-bancarios.index', $consultorId)
