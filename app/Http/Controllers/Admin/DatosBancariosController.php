@@ -79,8 +79,8 @@ class DatosBancariosController extends Controller
                 'es_principal' => $request->boolean('es_principal', false),
                 'correo' => $request->correo ?? null,
                 'telefono' => $request->telefono ?? null,
-                'observaciones' => $request->observaciones ?? null,
-                'estado' => 'activo'
+                'observaciones' => $request->observaciones ?? null
+                // Se eliminó el campo 'estado' que no existe en la tabla
             ];
             
             // Crear el registro
