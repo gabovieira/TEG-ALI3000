@@ -68,7 +68,7 @@ class DatosBancariosController extends Controller
             $consultor = Usuario::where('tipo_usuario', 'consultor')
                               ->findOrFail($consultorId);
             
-            // Preparar datos con valores por defecto
+            // Preparar solo los campos que existen en la tabla
             $datos = [
                 'usuario_id' => $consultorId,
                 'banco' => $request->banco,
@@ -76,12 +76,18 @@ class DatosBancariosController extends Controller
                 'numero_cuenta' => $request->numero_cuenta,
                 'cedula_rif' => $request->cedula_rif,
                 'titular' => $request->titular,
-                'es_principal' => $request->boolean('es_principal', false),
-                'correo' => $request->correo ?? null,
-                'telefono' => $request->telefono ?? null,
-                'observaciones' => $request->observaciones ?? null
-                // Se eliminó el campo 'estado' que no existe en la tabla
+                'es_principal' => $request->boolean('es_principal', false)
+                // Solo incluir los campos que existen en la tabla
             ];
+            
+            // Agregar campos opcionales solo si se proporcionan
+            if ($request->has('correo')) {
+                $datos['correo'] = $request->correo;
+            }
+            
+            if ($request->has('telefono')) {
+                $datos['telefono'] = $request->telefono;
+            }
             
             // Crear el registro
             $datosBancarios = DatosBancario::create($datos);
