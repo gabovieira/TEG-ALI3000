@@ -16,8 +16,17 @@
 
 <body>
     <!-- Hero Section -->
-    <div class="hero-section" style="padding: 4rem 0 2rem;">
-        <div class="container mx-auto px-4">
+    <div class="min-h-screen w-full bg-[#f8fafc] relative">
+        <!-- Grid Background -->
+        <div class="absolute inset-0 z-0" style="
+            background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+            background-size: 20px 30px;
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+        "></div>
+        
+        <div class="relative z-10" style="padding: 4rem 5rem 2rem;">
+            <div class="container mx-auto px-5">
             <div class="relative flex flex-wrap items-center justify-between w-full group py-4">
             <div>
                 <img class="h-20" src="{{ asset('assets/img/logoali3000.png') }}" alt="Logo ALI3000">
@@ -49,12 +58,7 @@
             <div class="grid w-full grid-cols-1 my-auto mt-12 mb-8 md:grid-cols-2 xl:gap-14 md:gap-5">
                 <div class="flex flex-col justify-center col-span-1 text-center lg:text-start">
                     <h1 class="hero-title">Transformamos tu visión en resultados</h1>
-                    <p class="text-xl text-slate-600 mb-6">Soluciones tecnológicas a medida para impulsar tu negocio</p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#contacto" class="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 text-center">
-                            Contáctanos
-                        </a>
-                    </div>
+                    <p class="text-xl text-slate-600 mb-6">Soluciones tecnológicas a medida para 
                 </div>
                 <div class="items-center justify-end hidden col-span-1 md:flex">
                     <img class="w-4/5 rounded-lg shadow-xl" src="{{ asset('assets/img/landing.svg') }}" alt="Imagen principal ALI3000">
@@ -64,7 +68,7 @@
     </div>
   <!-- Sección: Nosotros -->
   <section id="nosotros" class="landing-section nosotros-section">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-5">
             <div class="max-w-5xl mx-auto text-center">
                 <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">Sobre Nosotros</span>
                 <h2 class="text-4xl font-bold text-gray-900 mb-6">¿Quiénes somos?</h2>
